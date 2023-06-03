@@ -1,18 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm"
+import { Cost } from "./Cost"
 
-@Entity()
+
+export enum Sex {
+    MALE = 0,
+    FAMALE = 1
+}
+
+
+
+@Entity("tb_User")
 export class User {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    firstName: string
+    username: string
 
     @Column()
-    lastName: string
+    password: string
 
-    @Column()
-    age: number
+    @Column({type:"enum",enum:Sex,default:Sex.MALE})
+    sex: number
+
+    @Column({default:""})
+    photourl: string
+
+    @OneToMany(() => Cost, cost => cost.user)
+    costs: Cost[];
+
+    @CreateDateColumn()
+    insertdate:string
+
+    @Column({default:""})
+    city:string
 
 }

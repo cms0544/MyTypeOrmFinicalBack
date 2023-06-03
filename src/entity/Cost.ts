@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column,CreateDateColumn, ManyToOne } from "typeorm"
+import { User } from "./User"
 
-@Entity()
+@Entity("tb_Cost")
 export class Cost {
 
     @PrimaryGeneratedColumn()
@@ -9,19 +10,17 @@ export class Cost {
     @Column()
     descript: string
 
-    @Column("double")
+    @Column({type:"double"})
     price: number
 
-    @Column()
+    @CreateDateColumn({default:new Date()})
     date: string
-
-    @Column()
-    insertdate:string
 
     @Column()
     costtype:number
 
-    @Column()
-    userid:number
+ 
+    @ManyToOne(()=>User,user =>user.costs)
+    user:User
 
 }
