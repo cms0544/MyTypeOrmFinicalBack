@@ -1,12 +1,12 @@
 import { AppDataSource } from '../data-source'
 import { NextFunction, Request, Response } from "express"
-import { User } from "../entity/User"
+import { TbUser } from "../entity/TbUser"
 const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 
 export class UserController {
 
-    private userRepository = AppDataSource.getRepository(User)
+    private userRepository = AppDataSource.getRepository(TbUser)
 
     async all(request: Request, response: Response, next: NextFunction) {
         return this.userRepository.find()
@@ -26,7 +26,49 @@ export class UserController {
     //     return user
     // }
 
-
+   /**
+     * @swagger
+     * /users/login:
+     *    post: 
+     *      tags: 
+     *      - 用户
+     *      summary: 登录用户 
+     *      requestBody: 
+     *          description: 登录用户
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                           username:
+     *                               type: string
+     *                               description: 用户名
+     *                           password:
+     *                               type: string
+     *                               description: 密码
+     *      responses:
+     *        200:
+     *          description: successful operation 
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          success:
+     *                              type: integer
+     *                          msg:
+     *                              type: string
+     *                          token:
+     *                              type: string
+     *                          photourl:
+     *                              type: string
+     *                          roleid:
+     *                              type: integer
+     *        500:
+     *          description:  internal error
+     *        404:
+     *          description:  not found                
+     *  */ 
     async login(request:Request, response:Response,next:NextFunction){
         const {username,password} = request.body;
         const user = await this.userRepository.findOne({
@@ -108,7 +150,7 @@ export class UserController {
         }else{
             const password = bcryptjs.hashSync(request.body.password,10);
 
-            user = Object.assign(new User(), {
+            user = Object.assign(new TbUser(), {
                 username,
                 password,
                 sex,

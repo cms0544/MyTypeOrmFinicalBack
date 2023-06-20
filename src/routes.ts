@@ -1,6 +1,8 @@
 import { CostController } from "./controller/CostController"
 import { UploadController } from "./controller/UploadController"
 import { UserController } from "./controller/UserController"
+import { CurrentPriceController } from "./controller/CurrentPriceController"
+
 
 export const Routes = [
 {
@@ -35,8 +37,31 @@ export const Routes = [
     controller: CostController,
     action: "remove"
 },{
+    method:"get",
+    route: "/costs/getsum",
+    controller: CostController,
+    action: "getSum"
+},
+{
+    method:"get",
+    route: "/costs/getSumByMonth",
+    controller: CostController,
+    action: "getSumByMonth"
+    
+},{
     method:"post",
     route: "/upload",
     controller: UploadController,
     action: "upload"
+},{
+    method:"post",
+    route: "/curentprice/insertCurrentPrice",
+    controller: CurrentPriceController,
+    action: "insertCurrentPrice"
+},{
+    method:"get",
+    route: "/curentprice/getTopOneCurrentPrice",
+    controller: CurrentPriceController,
+    action: "getTopOneCurrentPrice"
+    
 }]

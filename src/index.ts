@@ -1,12 +1,14 @@
+import * as dotenv from 'dotenv' 
+dotenv.config({path:`.env.${process.env.NODE_ENV}`})
 import * as express from "express"
 import * as bodyParser from "body-parser"
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
+
 var  vaildLogin = require("./utils/valid")
 
 var swaggerInstall = require('./utils/swagger')
-
 
 AppDataSource.initialize().then(async () => {
 
@@ -14,6 +16,8 @@ AppDataSource.initialize().then(async () => {
     const app = express()
     app.use(bodyParser.json())
     swaggerInstall(app);
+
+
     // register express routes from defined application routes
     Routes.forEach(route => {
         (app as any)[route.method](route.route,vaildLogin, (req: Request, res: Response, next: Function) => {

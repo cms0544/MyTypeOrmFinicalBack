@@ -1,14 +1,13 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import { Cost } from "./entity/Cost"
-import { User } from "./entity/User"
+
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    host: "175.178.243.25",
-    port: 3306,
-    username: "root",
-    password: "admincmms",
+    host: process.env.SQLURL,
+    port: parseInt(process.env.SQLPORT),
+    username: process.env.SQLUSERNAME,
+    password: process.env.SQLPASSWORD,
     database: "mycost",
     synchronize: false,
     logging: false,

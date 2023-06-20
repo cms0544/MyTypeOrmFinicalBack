@@ -22,7 +22,11 @@
       "typeorm": "0.3.15"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
+      
+      "start": "set \"NODE_ENV=production\" && ts-node src/index.ts",
+      "dev": "set \"NODE_ENV=development\" && ts-node src/index.ts ",
+      "typeorm": "typeorm-ts-node-commonjs",
+      "db": "npx typeorm-model-generator -h localhost -d mycost -p 3306 -u root -x root -e mysql -o ./src/entity --noConfig true --ce pascal --cp camel"
+
    }
 }
