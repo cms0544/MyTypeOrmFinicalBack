@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express"
-import { resolve } from "path";
 
 var multer = require("multer")
 var fs = require("fs")
@@ -9,7 +8,7 @@ const path = require("path");
 const Storage = multer.diskStorage({
    
     destination:async function(req,res,cb){
-        console.log("test2222");
+   
         let isexists =await fs.existsSync("img");
         if(!isexists){
             await fs.mkdirSync("img");

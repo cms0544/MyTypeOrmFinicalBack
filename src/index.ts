@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv' 
-dotenv.config({path:`.env.${process.env.NODE_ENV}`})
 import * as express from "express"
 import * as bodyParser from "body-parser"
 import { Request, Response } from "express"
@@ -10,11 +8,13 @@ var  vaildLogin = require("./utils/valid")
 
 var swaggerInstall = require('./utils/swagger')
 
+
 AppDataSource.initialize().then(async () => {
 
-    // create express app
+    // create expres s app
     const app = express()
     app.use(bodyParser.json())
+    app.use("/img",express.static("img"))
     swaggerInstall(app);
 
 

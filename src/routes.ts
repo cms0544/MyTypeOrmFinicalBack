@@ -2,7 +2,8 @@ import { CostController } from "./controller/CostController"
 import { UploadController } from "./controller/UploadController"
 import { UserController } from "./controller/UserController"
 import { CurrentPriceController } from "./controller/CurrentPriceController"
-
+import { PathController } from "./controller/PathController"
+import { RoleController } from "./controller/RoleController"
 
 export const Routes = [
 {
@@ -21,6 +22,18 @@ export const Routes = [
     route: "/users/:id",
     controller: UserController,
     action: "remove"
+},{
+    method:"post",
+    route: "/users/getinfo",
+    controller: UserController,
+    action: "getinfo"
+    
+},{
+    method:"post",
+    route: "/users/logout",
+    controller: UserController,
+    action: "logout"
+    
 },{
     method:"get",
     route: "/costs",
@@ -64,4 +77,25 @@ export const Routes = [
     controller: CurrentPriceController,
     action: "getTopOneCurrentPrice"
     
+},{
+    method:"post",
+    route: "/path/queryAll",
+    controller: PathController,
+    action: "queryAll"
+    
+},{
+    method:"put",
+    route: "/path/addPath",
+    controller: PathController,
+    action: "add" 
+},{
+    method:"delete",
+    route: "/path/removePath",
+    controller:PathController,
+    action:"delete"
+},{
+    method:"get",
+    route: "/role/getRole",
+    controller:RoleController,
+    action:"getRole"
 }]

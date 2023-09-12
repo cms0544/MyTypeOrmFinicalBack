@@ -137,7 +137,7 @@ export class CostController {
  *                           costtype:
  *                               type: string
  *                               description: 支出类型
- *                           userid:
+ *                           id:
  *                               type: integer
  *                               description: id
  *       responses:
@@ -199,6 +199,7 @@ export class CostController {
     
             return {success:1};
         }catch(e){
+            console.log(e)
             return {success:0,message:e};
         }
       

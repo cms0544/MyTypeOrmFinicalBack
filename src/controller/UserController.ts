@@ -1,12 +1,20 @@
 import { AppDataSource } from '../data-source'
 import { NextFunction, Request, Response } from "express"
 import { TbUser } from "../entity/TbUser"
+import { TbRole } from '../entity/TbRole';
+
+import { TbUserRole } from '../entity/TbUserRole';
+import { TbRoleRoute } from '../entity/TbRoleRoute';
+import { convertJsonArrToArr } from '../utils/convetUtils';
+
 const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 
 export class UserController {
 
     private userRepository = AppDataSource.getRepository(TbUser)
+    private userRoleRepository = AppDataSource.getRepository(TbUserRole)
+    private tbRoleRouteRepository = AppDataSource.getRepository(TbRoleRoute)
 
     async all(request: Request, response: Response, next: NextFunction) {
         return this.userRepository.find()
@@ -165,6 +173,108 @@ export class UserController {
         
 
      
+    }
+
+    /**
+     * @swagger
+     * /users/getinfo:
+     *    post: 
+     *      tags: 
+     *      - 用户
+     *      summary: 获取用户角色路由  
+     *      security:
+     *          - bearerAuth: []
+     *      responses:
+     *        200:
+     *          description: successful operation 
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          success:
+     *                              type: integer
+     *                          res:
+     *                              type: object
+     *        500:
+     *          description:  internal error
+     *        404:
+     *          description:  not found                
+     *  */ 
+    async getinfo(request: Request,response: Response,next: NextFunction) {
+        try{
+            const id = parseInt(request.params.id)
+            console.log(request.id);
+            let rolearr =await this.userRoleRepository.createQueryBuilder("tb_user_role")
+            .leftJoinAndSelect("tb_user_role.role","tb_role")
+            .select("tb_role.name","name")
+            .where("tb_user_role.userid=:userid", {userid:request.id})
+            .orderBy("tb_role.id","ASC")
+            .getRawMany();
+            
+            let roles = convertJsonArrToArr(rolearr)
+            
+            const roleQb = await this.userRoleRepository.createQueryBuilder("tb_user_role")
+            .where("tb_user_role.userid=:userid", {userid:request.id})
+            .select("tb_user_role.roleid","roleid")
+            
+
+            let routearr = await this.tbRoleRouteRepository.createQueryBuilder("tb_role_route")
+            .leftJoinAndSelect("tb_role_route.path","tb_path")
+            .select("tb_path.*")
+            
+            .where("tb_role_route.roleid in ("+roleQb.getQuery()+")")
+            .setParameters(roleQb.getParameters())
+            .getRawMany();
+
+            let routes = routearr
+            
+            return {
+                success:1,
+                res:{
+                    roles,
+                    routes
+                }
+            }
+        }catch(ex){
+            console.log(ex)
+            return {
+                success:0,
+                err:ex
+            }
+        }
+    }
+
+    /**
+     * @swagger
+     * /users/logout:
+     *    post: 
+     *      tags: 
+     *      - 注销
+     *      summary: 注销  
+     *      security:
+     *          - bearerAuth: []
+     *      responses:
+     *        200:
+     *          description: successful operation 
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          success:
+     *                              type: integer
+     *                          res:
+     *                              type: object
+     *        500:
+     *          description:  internal error
+     *        404:
+     *          description:  not found                
+     *  */ 
+    async logout(request:Request, response: Response,next: NextFunction){
+        return {
+            success:1
+        }
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
